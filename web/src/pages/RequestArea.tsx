@@ -24,6 +24,7 @@ import {useBackfill} from './useBackfill';
 import {useStore} from './Workspace';
 
 type Props = {session: SessionSummary; canSubmit: boolean; blockedReason: string | null};
+const EXAMPLE_PROMPT = 'Show a sample request moving through OpenInfer.';
 
 export const STATE: Record<Request['state'], {label: string; tone: Tone}> = {
   pending: {label: 'Queued', tone: 'neutral'},
@@ -160,7 +161,13 @@ export function RequestArea({session, canSubmit, blockedReason}: Props) {
             )}
             {!panel.draft.acceptanceId && !panel.draft.file && (
               <div className="flex flex-col gap-2">
-                <Label htmlFor="prompt">Prompt</Label>
+                <div className="flex items-center justify-between gap-3">
+                  <Label htmlFor="prompt">Prompt</Label>
+                  <Button type="button" variant="link" disabled={!usable}
+                          onClick={() => dispatch({type: 'edit', patch: {prompt: EXAMPLE_PROMPT}})}>
+                    Use example prompt
+                  </Button>
+                </div>
                 <Textarea id="prompt" rows={5} disabled={!usable} value={panel.draft.prompt}
                           onChange={(e) => dispatch({type: 'edit', patch: {prompt: e.target.value}})} />
               </div>

@@ -13,7 +13,8 @@ const [NEW_PASSWORD, RIGHT_PASSWORD, WRONG_PASSWORD] = [0, 1, 2].map(() => `pw-$
 const user = userEvent.setup();
 
 beforeEach(() => {
-  window.location.hash = '';
+  // Existing walkthroughs start on Devices; the signed-in app now opens Home by default.
+  window.location.hash = '#/devices';
   window.localStorage.clear();
   fake = new FakeBackend();
   fake.install();
@@ -94,6 +95,21 @@ async function submitPrompt(text: string) {
 }
 
 describe('full walkthrough', () => {
+  it('opens the guided home page after sign-in and links to the existing device flow', async () => {
+    window.location.hash = '';
+    await register();
+    expect(await screen.findByRole('heading', {name: 'Home'})).toBeInTheDocument();
+    expect(screen.getByText('1. Connect devices')).toBeInTheDocument();
+    await user.click(screen.getAllByRole('link', {name: 'Open devices'})[0]);
+    expect(await screen.findByRole('heading', {name: 'Devices'})).toBeInTheDocument();
+  });
+
+  it('fills the example prompt for a ready session', async () => {
+    await readySession();
+    await user.click(screen.getByRole('button', {name: 'Use example prompt'}));
+    expect(screen.getByLabelText('Prompt')).toHaveValue('Show a sample request moving through OpenInfer.');
+  });
+
   it('goes from registration to the end of a session', async () => {
     page();
     // Register.

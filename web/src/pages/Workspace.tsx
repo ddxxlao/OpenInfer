@@ -13,6 +13,7 @@ import {cn} from '@/lib/utils';
 import {enrollmentReducer, initialEnrollment, type EnrollmentEvent, type EnrollmentState} from '@/state/enrollment';
 import {initialLive, isStale, liveReducer, type LiveEvent, type LiveState} from '@/state/live';
 import {ApiKeysPage} from './ApiKeysPage';
+import {HomePage} from './HomePage';
 import {DevicesPage} from './DevicesPage';
 import {NewSessionPage} from './NewSessionPage';
 import {SessionPage} from './SessionPage';
@@ -130,6 +131,7 @@ export function Workspace({identity, client, onSignedOut}: Props) {
           <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-2 px-4 sm:gap-5 sm:px-6">
             <span className="text-[15px] font-semibold tracking-tight">OpenInfer</span>
             <nav className="flex items-center gap-1">
+              {navLink('#/home', 'Home', route.page === 'home')}
               {navLink('#/devices', 'Devices', route.page === 'devices')}
               {navLink('#/sessions', 'Sessions', sessionsActive)}
               {navLink('#/api-keys', 'API keys', route.page === 'api_keys')}
@@ -156,6 +158,7 @@ export function Workspace({identity, client, onSignedOut}: Props) {
         <main className="mx-auto flex w-full max-w-5xl min-w-0 flex-col gap-6 px-4 py-8 sm:px-6">
           {signOut.error && <Alert variant="destructive"><AlertDescription>{describeError(signOut.error.body, devices)}</AlertDescription></Alert>}
           {live.connection === 'connecting' && <p className="text-sm text-muted-foreground">Connecting…</p>}
+          {route.page === 'home' && <HomePage />}
           {route.page === 'devices' && <DevicesPage />}
           {route.page === 'sessions' && <SessionsPage />}
           {route.page === 'new_session' && <NewSessionPage />}

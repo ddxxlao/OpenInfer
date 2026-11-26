@@ -1,6 +1,7 @@
 import {useSyncExternalStore} from 'react';
 
 export type Route =
+  | {page: 'home'}
   | {page: 'devices'}
   | {page: 'sessions'}
   | {page: 'new_session'}
@@ -9,6 +10,8 @@ export type Route =
 
 export function parseRoute(hash: string): Route {
   const [, section, rest] = hash.replace(/^#/, '').split('/');
+  if (section === 'home' || !section) return {page: 'home'};
+  if (section === 'devices') return {page: 'devices'};
   if (section === 'api-keys') return {page: 'api_keys'};
   if (section === 'sessions') {
     if (!rest) return {page: 'sessions'};
